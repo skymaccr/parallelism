@@ -4,6 +4,8 @@ using ShippingManager.FedEx;
 using ShippingManager.USPS;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace SequentialExecution
 {
@@ -11,38 +13,32 @@ namespace SequentialExecution
     {
         static void Main(string[] args)
         {
-            DateTime startTime = DateTime.Now;
+            var stopWatch = Stopwatch.StartNew();
+            stopWatch.Start();
+            //Get Bank Exchange Rates
+            BNCRManager bank = new BNCRManager();
+            var exchangeRates = bank.GetExchangeRate();
+
             List<ShippingRate> rates = new List<ShippingRate>();
 
-            //Get FedEx
-            FedExManager fedEx = new FedExManager();
-            rates.AddRange(fedEx.GetRates());
+            FedExManager fedExManager = new FedExManager();
+            rates.AddRange(fedExManager.GetRates());
 
-            //Get USPS
-            USPSProvider usps = new USPSProvider();
-            rates.AddRange(usps.GetRates());
+            USPSManager uspsManager = new USPSManager();
+            rates.AddRange(uspsManager.GetRates());
 
-            //Get Bank Exchange Rates
-            BNCRManager bncr = new BNCRManager();
-            var exchangeRates = bncr.GetExchangeRate();
+            var ratesInColones = rates.Select(c => { c.Price = c.Price * exchangeRates.PurchasePrice; return c; }).ToList();
 
-
-            foreach (var item in rates)
-            {
-                item.Price = item.Price * exchangeRates.PurchasePrice;
-            }
+            stopWatch.Stop();
+            Console.WriteLine($"Sequential Time {stopWatch.ElapsedMilliseconds}");
 
             Console.WriteLine("Shipping Method          Price (Colones)");
-            foreach (var item in rates)
+            foreach (var rate in rates)
             {
-                Console.WriteLine($"{item.Method}           {item.Price}");
+                Console.WriteLine($"{rate.Method}           {rate.Price}");
             }
 
-            DateTime endTime = DateTime.Now;
-
-            Console.WriteLine($"Sequential Time {endTime.Subtract(startTime).Milliseconds}");
-
-            Console.ReadKey(); 
+            //Console.ReadKey(); 
         }
     }
 }

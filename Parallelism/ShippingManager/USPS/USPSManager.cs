@@ -12,20 +12,19 @@ using System.Xml.Linq;
 
 namespace ShippingManager.USPS
 {
-    public class USPSProvider
+    public class USPSManager : IShippingManager
     {
         private const string PRODUCTION_URL = "http://production.shippingapis.com/ShippingAPI.dll";
         private const string REMOVE_FROM_RATE_NAME = "&lt;sup&gt;&amp;reg;&lt;/sup&gt;";
         private readonly string _service;
         private readonly string _userId;
 
-        public USPSProvider()
+        public USPSManager()
         {
-            _userId = "XXX";
+            _userId = "946CBCSC7886";
             _service = "ALL";
         }
-
-
+        
         public List<ShippingRate> GetRates()
         {
             var sb = new StringBuilder();
@@ -45,7 +44,7 @@ namespace ShippingManager.USPS
                 writer.WriteStartElement("Package");
                 writer.WriteAttributeString("ID", "1");
                 writer.WriteElementString("Service", _service);
-                writer.WriteElementString("ZipOrigination", "73301");
+                writer.WriteElementString("ZipOrigination", "90210");
                 writer.WriteElementString("ZipDestination", "38017");
                 writer.WriteElementString("Pounds", "15");
                 writer.WriteElementString("Ounces", "0");
@@ -78,8 +77,6 @@ namespace ShippingManager.USPS
                 return null;
             }
         }
-
-
 
         private List<ShippingRate> ParseResult(string response)
         {
@@ -122,6 +119,17 @@ namespace ShippingManager.USPS
             //        AddError(err);
             //    }
             //}
+        }
+
+        public List<ShippingRate> GetRates(int numberOfExcecutions)
+        {
+            List<ShippingRate> result = new List<ShippingRate>();
+            for (int i = 0; i < numberOfExcecutions; i++)
+            {
+                result.AddRange(GetRates());
+            }
+
+            return result;
         }
     }
 }

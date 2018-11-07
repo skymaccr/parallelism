@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ShippingManager.FedEx
 {
-    public class FedExManager
+    public class FedExManager : IShippingManager
     {
         public List<ShippingRate> GetRates()
         {
@@ -13,13 +13,13 @@ namespace ShippingManager.FedEx
             //
             request.WebAuthenticationDetail = new WebAuthenticationDetail();
             request.WebAuthenticationDetail.UserCredential = new WebAuthenticationCredential();
-            request.WebAuthenticationDetail.UserCredential.Key = "XXX"; 
-            request.WebAuthenticationDetail.UserCredential.Password = "XXX"; 
+            request.WebAuthenticationDetail.UserCredential.Key = "Qc0L7y4hA4oXJl29"; 
+            request.WebAuthenticationDetail.UserCredential.Password = "kDfSjJB8pRObtKdNN5vv8yd1u"; 
            
             //
             request.ClientDetail = new ClientDetail();
-            request.ClientDetail.AccountNumber = "XXX"; 
-            request.ClientDetail.MeterNumber = "XXX"; 
+            request.ClientDetail.AccountNumber = "510087500"; 
+            request.ClientDetail.MeterNumber = "119056534"; 
             
             //
             request.TransactionDetail = new TransactionDetail();
@@ -79,9 +79,9 @@ namespace ShippingManager.FedEx
             request.RequestedShipment.Shipper = new Party();
             request.RequestedShipment.Shipper.Address = new Address();
             request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { "SHIPPER ADDRESS LINE 1" };
-            request.RequestedShipment.Shipper.Address.City = "Austin";
-            request.RequestedShipment.Shipper.Address.StateOrProvinceCode = "TX";
-            request.RequestedShipment.Shipper.Address.PostalCode = "73301";
+            request.RequestedShipment.Shipper.Address.City = "Beverly Hills";
+            request.RequestedShipment.Shipper.Address.StateOrProvinceCode = "CA";
+            request.RequestedShipment.Shipper.Address.PostalCode = "90210";
             request.RequestedShipment.Shipper.Address.CountryCode = "US";
         }
 
@@ -142,6 +142,17 @@ namespace ShippingManager.FedEx
             request.RequestedShipment.SpecialServicesRequested.CodDetail.CodCollectionAmount.AmountSpecified = true;
             request.RequestedShipment.SpecialServicesRequested.CodDetail.CodCollectionAmount.Currency = "USD";
             request.RequestedShipment.SpecialServicesRequested.CodDetail.CollectionType = CodCollectionType.GUARANTEED_FUNDS;// ANY, CASH, GUARANTEED_FUNDS
+        }
+
+        public List<ShippingRate> GetRates(int numberOfExcecutions)
+        {
+            List<ShippingRate> result = new List<ShippingRate>();
+            for (int i = 0; i < numberOfExcecutions; i++)
+            {
+                result.AddRange(GetRates());
+            }
+
+            return result;
         }
     }
 }

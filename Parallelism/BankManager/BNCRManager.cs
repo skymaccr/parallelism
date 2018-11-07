@@ -2,7 +2,7 @@
 
 namespace BankManager
 {
-    public class BNCRManager
+    public class BNCRManager : IBankManager
     {        
         public DolarExchangeRate GetExchangeRate()
         {
