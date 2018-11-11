@@ -18,7 +18,7 @@ namespace Test
             int secuentialWins = 0, parallelwins = 0;
             decimal secuentialTotal = 0, parallelTotal = 0;
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Task<long> sequential = Task.Factory.StartNew(() =>
                 {
@@ -41,7 +41,7 @@ namespace Test
                     secuentialWins++;
             }
 
-            if (parallelwins < secuentialWins)
+            if (secuentialWins > parallelwins)
                 Console.WriteLine($"Secuential wins {secuentialWins} to {parallelwins}");
             else
                 Console.WriteLine($"Parallel wins {parallelwins} to {secuentialWins}");

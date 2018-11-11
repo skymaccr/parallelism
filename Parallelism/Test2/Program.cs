@@ -11,7 +11,7 @@ namespace Test2
     {
         static void Main(string[] args)
         {
-            int numberOfThreads = 10;
+            int numberOfThreads = 8;
             int numberOfIterations = 10000;
             int startOfRange = 80;
 
